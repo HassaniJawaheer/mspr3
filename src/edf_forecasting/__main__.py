@@ -1,5 +1,5 @@
-"""kedro_mspr file for ensuring the package is executable
-as `kedro-mspr` and `python -m kedro_mspr`
+"""edf_forecasting file for ensuring the package is executable
+as `edf_forecasting` and `python -m edf_forecasting`
 """
 import sys
 from pathlib import Path

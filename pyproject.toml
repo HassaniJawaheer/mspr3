@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 requires-python = ">=3.9"
-name = "kedro_mspr"
+name = "edf_forecasting"
 readme = "README.md"
 dynamic = [ "version",]
 dependencies = [
@@ -18,14 +18,14 @@ dependencies = [
 ]
 
 [project.scripts]
-kedro-mspr = "kedro_mspr.__main__:main"
+kedro-mspr = "edf_forecasting.__main__:main"
 
 [project.optional-dependencies]
 dev = [ "pytest-cov~=3.0", "pytest-mock>=1.7.1, <2.0", "pytest~=7.2", "ruff~=0.1.8",]
 
 [tool.kedro]
-package_name = "kedro_mspr"
-project_name = "kedro_mspr"
+package_name = "edf_forecasting"
+project_name = "edf_forecasting"
 kedro_init_version = "0.19.12"
 tools = "['Linting', 'Testing', 'Custom Logging', 'Data Structure']"
 example_pipeline = "False"
@@ -40,7 +40,7 @@ ignore = [ "E501",]
 [project.entry-points."kedro.hooks"]
 
 [tool.pytest.ini_options]
-addopts = "--cov-report term-missing --cov src/kedro_mspr -ra"
+addopts = "--cov-report term-missing --cov src/edf_forecasting -ra"
 
 [tool.coverage.report]
 fail_under = 0
@@ -51,7 +51,7 @@ exclude_lines = [ "pragma: no cover", "raise NotImplementedError",]
 docstring-code-format = true
 
 [tool.setuptools.dynamic.version]
-attr = "kedro_mspr.__version__"
+attr = "edf_forecasting.__version__"
 
 [tool.setuptools.packages.find]
 where = [ "src",]
