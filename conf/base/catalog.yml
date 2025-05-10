@@ -2,3 +2,86 @@
 #
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
+
+consumption_data:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/eco2mix/definitive/consumption_data.csv
+
+tempo_calendar:
+  type: pandas.CSVDataSet
+  filepath: data/02_intermediate/eco2mix/tempo/tempo_calendar.csv
+
+cleaned_consumption_data:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/eco2mix/definitive/cleaned_consumption_data.csv
+
+cleaned_tempo_calendar:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/eco2mix/tempo/cleaned_tempo_calendar.csv
+
+aggregated_consumption_data:
+  type: pandas.CSVDataSet
+  filepath: data/04_aggregate/eco2mix/definitive/aggregated_consumption_data.csv
+
+tempo_aggregated_consumption_data:
+  type: pandas.CSVDataSet
+  filepath: data/05_tempo/eco2mix/aggregate_day/tempo_aggregated_consumption_data.csv
+
+features_day:
+  type: pandas.CSVDataSet
+  filepath: data/06_features/eco2mix/day/features.csv
+
+cleaned_consumption_data_30min:
+  type: pandas.CSVDataSet
+  filepath: data/03_primary/eco2mix/definitive/cleaned_consumption_data_30min.csv
+
+features_minute:
+  type: pandas.CSVDataSet
+  filepath: data/06_features/eco2mix/minute/features_minute.csv
+
+X_train_agg_day:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/X_train_agg_day.csv
+  load_args:
+    delimiter: ","
+  save_args:
+    index: False
+
+X_test_agg_day:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/X_test_agg_day.csv
+  load_args:
+    delimiter: ","
+  save_args:
+    index: False
+
+y_train_agg_day:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/y_train_agg_day.csv
+  load_args:
+    delimiter: ","
+  save_args:
+    index: False
+
+y_test_agg_day:
+  type: pandas.CSVDataSet
+  filepath: data/05_model_input/y_test_agg_day.csv
+  load_args:
+    delimiter: ","
+  save_args:
+    index: False
+
+xgboost_best_params:
+  type: kedro.extras.datasets.yaml.YAMLDataSet
+  filepath: data/07_models/eco2mix/xgboost_day/tuning_<timestamp>/best_params.yml
+
+xgboost_tuning_study_path:
+  type: kedro.extras.datasets.text.TextDataSet
+  filepath: data/07_models/eco2mix/xgboost_day/tuning_<timestamp>/optuna_study.db
+
+xgboost_tuning_plots_dir:
+  type: kedro.extras.datasets.tracking.JSONDataSet
+  filepath: data/07_models/eco2mix/xgboost_day/tuning_<timestamp>/plots/plot_paths.json
+  versioned: false
+
+

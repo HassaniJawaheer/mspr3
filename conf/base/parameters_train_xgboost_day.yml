@@ -1,0 +1,58 @@
+# This is a boilerplate parameters config generated for pipeline 'train_xgboost_day'
+# using Kedro 0.19.12.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://docs.kedro.org/en/0.19.12/configuration/parameters.html
+
+scraping:
+  output_dir: data/01_raw/eco2mix
+  start_year_definitive: 2015
+  end_year_definitive: 2022
+  start_year_tempo: 2014
+  end_year_tempo: 2023
+
+prestructuring:
+  raw_dir: data/01_raw/eco2mix
+  output_dir: data/02_intermediate/eco2mix
+  start_year: 2015
+  end_year: 2022
+
+cleaning:
+  columns_to_keep:
+    - Date
+    - Heures
+    - Consommation
+    - Nature
+  tempo_column_name: Type de jour Tempo
+  new_tempo_column_name: tempo
+  consumption_col: Consommation
+
+add_tempo:
+  mode: aggregate_day
+
+add_features:
+  include:
+    - temperature
+    - sunshine
+    - weekday
+    - month
+    - season
+    - vacation
+
+preprocessing:
+  target_col_prefix: "Consommation_"
+  window_size: 7
+  seed: 42
+  features_to_include:
+    - weekday
+    - month
+    - season
+    - tempo
+  target_features_to_include: []
+  test_size: 0.2
+  shuffle: false
+
+tuning:
+  n_trials: 20
+  timeout: null
+  seed: 42

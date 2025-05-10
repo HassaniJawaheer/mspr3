@@ -1,7 +1,7 @@
-import os
 import numpy as np
 import pandas as pd
 import logging
+from sklearn.model_selection import train_test_split
 
 logging.basicConfig(level=logging.INFO)
 
@@ -9,8 +9,6 @@ class Eco2mixPreprocessGBoostDay:
     """Prepares daily Eco2mix data for XGBoost training using sliding windows."""
 
     def __init__(self, 
-        input_path,
-        output_dir,
         target_col_prefix='Consommation_',
         window_size=7,
         seed=42,
@@ -19,8 +17,6 @@ class Eco2mixPreprocessGBoostDay:
         test_size=0.2,
         shuffle=False
     ):
-        self.input_path = input_path
-        self.output_dir = output_dir
         self.target_col_prefix = target_col_prefix
         self.window_size = window_size
         self.seed = seed
@@ -29,24 +25,23 @@ class Eco2mixPreprocessGBoostDay:
         self.test_size = test_size
         self.shuffle = shuffle
 
-    def run(self):
-        df = self._read_df(self.input_path)
-        df, mappings = self._encode_categorical(df, columns=self.features_to_include + self.target_features_to_include)
+    def run(self, df):
+        df, _ = self._encode_categorical(df, self.features_to_include + self.target_features_to_include)
 
-        X, y, dates = self._create_dataset_sliding(
+        X, y, _ = self._create_dataset_sliding(
             df,
-            window_size=self.window_size,
-            target_col_prefix=self.target_col_prefix,
-            date_col='Date',
-            features_to_include=self.features_to_include,
-            target_features_to_include=self.target_features_to_include
+            self.window_size,
+            self.target_col_prefix,
+            'Date',
+            self.features_to_include,
+            self.target_features_to_include
         )
 
-        self._save_split(X, y)
-        logging.info("Preprocessing completed and files saved.")
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=self.test_size, shuffle=self.shuffle, random_state=self.seed
+        )
 
-    def _read_df(self, path):
-        return pd.read_csv(path)
+        return X_train, X_test, y_train, y_test
 
     def _create_dataset_sliding(self, df, window_size, target_col_prefix, date_col,
                                 features_to_include, target_features_to_include):
@@ -60,13 +55,13 @@ class Eco2mixPreprocessGBoostDay:
             for j in range(window_size):
                 row = window_df.iloc[j]
                 if features_to_include:
-                    features.extend(row[features_to_include].values.tolist())
-                features.extend(row[target_cols].values.tolist())
+                    features.extend(row[features_to_include].tolist())
+                features.extend(row[target_cols].tolist())
 
             if target_features_to_include:
-                features.extend(df.iloc[i][target_features_to_include].values.tolist())
+                features.extend(df.iloc[i][target_features_to_include].tolist())
 
-            y_values = df.iloc[i][target_cols].values.tolist()
+            y_values = df.iloc[i][target_cols].tolist()
             X_list.append(np.array(features))
             y_list.append(y_values)
             date_list.append(df.iloc[i][date_col])
@@ -90,19 +85,3 @@ class Eco2mixPreprocessGBoostDay:
     def _is_boolean_column(self, df, col):
         unique_vals = set(df[col].dropna().unique())
         return unique_vals <= {0, 1} or unique_vals <= {True, False}
-
-    def _save_split(self, X, y):
-        from sklearn.model_selection import train_test_split
-
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size = self.test_size, shuffle = self.shuffle, random_state=self.seed
-        )
-
-        os.makedirs(self.output_dir, exist_ok=True)
-
-        np.savetxt(os.path.join(self.output_dir, f"X_train_seed{self.seed}.csv"), X_train, delimiter=",")
-        np.savetxt(os.path.join(self.output_dir, f"X_test_seed{self.seed}.csv"), X_test, delimiter=",")
-        np.savetxt(os.path.join(self.output_dir, f"y_train_seed{self.seed}.csv"), y_train, delimiter=",")
-        np.savetxt(os.path.join(self.output_dir, f"y_test_seed{self.seed}.csv"), y_test, delimiter=",")
-
-        logging.info(f"Files saved to {self.output_dir} with seed {self.seed}")
