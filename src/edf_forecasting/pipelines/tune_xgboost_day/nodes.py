@@ -5,6 +5,7 @@ from edf_forecasting.components.eco2mix_preprocess_gboost_day import Eco2mixPrep
 from edf_forecasting.components.eco2mix_tune_gboost_day import XGBoostTuner
 from edf_forecasting.components.eco2mix_generate_tuning_plots_gboost_day import generate_tuning_plots
 import os
+import optuna
 
 # Aggregate data 30min daily data
 def aggregate_data(df):
@@ -45,6 +46,5 @@ def tune_model(X, y, params):
     best_params, summary = tuner.run(X, y)
     return best_params, summary
 
-def generate_plots_from_study(study_path: str) -> dict:
-    output_dir = os.path.dirname(study_path).replace("optuna_study.db", "plots")
-    return generate_tuning_plots(study_path, output_dir)
+def generate_plots_from_study(study: optuna.Study, params) -> dict:
+    return generate_tuning_plots(study, params["output_dir"])

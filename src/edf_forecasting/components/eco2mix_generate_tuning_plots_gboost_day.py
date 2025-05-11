@@ -1,30 +1,33 @@
 import os
-import optuna
 import logging
+import plotly.io as pio
+import optuna
 
 from optuna.visualization import plot_optimization_history, plot_param_importances
 
 logging.basicConfig(level=logging.INFO)
 
-def generate_tuning_plots(study_path: str, output_dir: str):
-    """Charge une Optuna study et génère les visualisations (.png)."""
+def generate_tuning_plots(study: optuna.Study, output_dir: str) -> dict:
     os.makedirs(output_dir, exist_ok=True)
 
     try:
-        study = optuna.load_study(study_name="xgb_tuning", storage=f"sqlite:///{study_path}")
-
         fig1 = plot_optimization_history(study)
-        fig1.write_image(os.path.join(output_dir, "optimization_history.png"))
-
         fig2 = plot_param_importances(study)
-        fig2.write_image(os.path.join(output_dir, "param_importances.png"))
 
-        logging.info("Plots generated successfully.")
+        path1 = os.path.join(output_dir, "optimization_history.png")
+        path2 = os.path.join(output_dir, "param_importances.png")
+
+        # Sauvegarde en PNG via Plotly
+        pio.write_image(fig1, path1)
+        pio.write_image(fig2, path2)
+
+        logging.info("Tuning plots saved successfully.")
         return {
-            "optimization_history": os.path.join(output_dir, "optimization_history.png"),
-            "param_importances": os.path.join(output_dir, "param_importances.png")
+            "optimization_history": path1,
+            "param_importances": path2
         }
 
     except Exception as e:
         logging.warning(f"Failed to generate tuning plots: {e}")
         return {}
+

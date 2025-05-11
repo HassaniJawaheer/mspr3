@@ -18,8 +18,10 @@ def scrape_data(params):
     scraper.scrape_definitive_data(start_year_def, end_year_def)
     scraper.scrape_tempo_data(start_year_tempo, end_year_tempo)
 
+    return {"scraping_status": "done"}
+
 # Prestructure raw data
-def prestructure_data(params):
+def prestructure_data(_, params):
     raw_dir = params["raw_dir"]
     output_dir = params["output_dir"]
     start_year = params["start_year"]
@@ -28,9 +30,11 @@ def prestructure_data(params):
     preparator = Eco2MixDataPreparator(raw_dir, output_dir)
     preparator.prepare_consumption_data(start_year, end_year)
     preparator.prepare_tempo_calendar(start_year, end_year)
+    
+    return {"prestructuring_status": "done"}
 
 # Cleans structured data
-def clean_data(df_definitive, df_tempo, params):
+def clean_data(_, df_definitive, df_tempo, params):
     cleaner = Eco2mixCleaner(
         columns_to_keep=params["columns_to_keep"],
         tempo_column_name=params["tempo_column_name"],

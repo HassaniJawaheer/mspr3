@@ -65,8 +65,11 @@ def create_pipeline(**kwargs) -> Pipeline:
 
         node(
             func=generate_plots_from_study,
-            inputs="xgboost_tuning_study_path",
-            outputs="xgboost_tuning_plots_dir",
-            name="generate_tuning_plots_node"
-        ),
+            inputs=[
+                "xgboost_tuning_study", 
+                "params:parameters_tune_xgboost_day@plot_tuning_dir"
+            ],
+            outputs="tuning_plot_paths",
+            name="generate_plots_from_study"
+        )
     ])

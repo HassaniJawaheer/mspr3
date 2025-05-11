@@ -19,10 +19,8 @@ prestructuring:
 
 cleaning:
   columns_to_keep:
-    - Date
-    - Heures
+    - Datetime
     - Consommation
-    - Nature
-  tempo_column_name: Type de jour Tempo
+  tempo_column_name: Type de jour TEMPO
   new_tempo_column_name: tempo
   consumption_col: Consommation
