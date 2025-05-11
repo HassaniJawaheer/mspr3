@@ -84,4 +84,27 @@ xgboost_tuning_plots_dir:
   filepath: data/07_models/eco2mix/xgboost_day/tuning_<timestamp>/plots/plot_paths.json
   versioned: false
 
+xgboost_model_artifact_path:
+  type: kedro.extras.datasets.text.TextDataSet
+  filepath: data/08_final_models/xgboost_day/latest/model.joblib
+  versioned: true
 
+xgboost_training_scores_path:
+  type: kedro.extras.datasets.text.TextDataSet
+  filepath: data/08_final_models/xgboost_day/latest/scores.yml
+  versioned: true
+
+xgboost_training_metadata_path:
+  type: kedro.extras.datasets.text.TextDataSet
+  filepath: data/08_final_models/xgboost_day/latest/training.yml
+  versioned: true
+
+xgboost_crossval_scores:
+  type: kedro.extras.datasets.yaml.YAMLDataSet
+  filepath: data/08_final_models/xgboost_day/crossval_scores.yml
+  versioned: true
+
+xgboost_evaluation_scores:
+  type: kedro.extras.datasets.yaml.YAMLDataSet
+  filepath: data/08_final_models/xgboost_day/evaluation_scores.yml
+  versioned: true

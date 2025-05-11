@@ -1,37 +1,12 @@
 """
-This is a boilerplate pipeline 'train_xgboost_day'
+This is a boilerplate pipeline 'tune_xgboost_day'
 generated using Kedro 0.19.12
 """
 from kedro.pipeline import node, Pipeline, pipeline  # noqa
-from .nodes import generate_plots_from_study, scrape_data, prestructure_data, clean_data, aggregate_data, add_tempo, add_features, preprocess_data, tune_model
+from .nodes import aggregate_data, add_tempo, add_features, preprocess_data, tune_model, generate_plots_from_study
 
 def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
-        node(
-            func=scrape_data,
-            inputs="params:parameters_xgboost_training@scraping",
-            outputs=None,
-            name="scrape_data"
-        ),
-
-        node(
-            func=prestructure_data,
-            inputs="params:parameters_xgboost_training@prestructuring",
-            outputs=None,
-            name="prestructure_data"
-        ),
-
-        node(
-            func=clean_data,
-            inputs=[
-                "consumption_data",
-                "tempo_calendar",
-                "params:parameters_xgboost_training@cleaning"
-            ],
-            outputs=["cleaned_consumption_data", "cleaned_tempo_calendar"],
-            name="clean_data"
-        ),
-
         node(
             func=aggregate_data,
             inputs="cleaned_consumption_data",
@@ -44,7 +19,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             inputs=[
                 "aggregated_consumption_data",
                 "cleaned_tempo_calendar",
-                "params:parameters_xgboost_training@add_tempo"
+                "params:parameters_tune_xgboost_day@add_tempo"
             ],
             outputs="tempo_aggregated_consumption_data",
             name="add_tempo"
@@ -53,7 +28,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             func=add_features,
             inputs=[
                 "tempo_aggregated_consumption_data",
-                "params:parameters_xgboost_training@add_features"
+                "params:parameters_tune_xgboost_day@add_features"
             ],
             outputs="features_day",
             name="add_features"
@@ -63,7 +38,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             func=preprocess_data,
             inputs=[
                 "features_day",
-                "params:parameters_xgboost_training@preprocessing"
+                "params:parameters_tune_xgboost_day@preprocessing"
             ],
             outputs=[
                 "X_train_agg_day",
@@ -79,7 +54,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             inputs=[
                 "X_train_agg_day",
                 "y_train_agg_day",
-                "params:parameters_xgboost_training@tuning"
+                "params:parameters_tune_xgboost_day@tuning"
             ],
             outputs=[
                 "xgboost_best_params",
@@ -94,5 +69,4 @@ def create_pipeline(**kwargs) -> Pipeline:
             outputs="xgboost_tuning_plots_dir",
             name="generate_tuning_plots_node"
         ),
-
-])
+    ])

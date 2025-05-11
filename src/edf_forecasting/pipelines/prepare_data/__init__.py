@@ -1,5 +1,5 @@
 """
-This is a boilerplate pipeline 'train_xgboost_day'
+This is a boilerplate pipeline 'prepare_data'
 generated using Kedro 0.19.12
 """
 
