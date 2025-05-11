@@ -1,24 +1,12 @@
 import pandas as pd
-import os
-import pickle
-import logging
 from typing import List, Optional
 from datetime import timedelta
 from pytorch_forecasting import TimeSeriesDataSet
 from pytorch_forecasting.data import GroupNormalizer
 
-logging.basicConfig(level=logging.INFO)
-
 class Eco2mixCreateTSDatasetsTFT:
-    """
-    Creates and saves TimeSeriesDataSet objects for training, validation, and test 
-    based on test cutoff and validation duration in years (can be float).
-    """
-
     def __init__(
         self,
-        df_path: str,
-        output_dir: str,
         test_cutoff_years: float,
         val_duration_years: float,
         max_encoder_length: int,
@@ -34,8 +22,6 @@ class Eco2mixCreateTSDatasetsTFT:
         add_encoder_length: bool = True,
         target_normalizer=None
     ):
-        self.df_path = df_path
-        self.output_dir = output_dir
         self.test_cutoff_years = test_cutoff_years
         self.val_duration_years = val_duration_years
         self.max_encoder_length = max_encoder_length
@@ -51,12 +37,8 @@ class Eco2mixCreateTSDatasetsTFT:
         self.add_encoder_length = add_encoder_length
         self.target_normalizer = target_normalizer or GroupNormalizer(groups=["series_id"])
 
-        self.training = None
-        self.validation = None
-        self.test = None
-
-    def run(self):
-        df = pd.read_parquet(self.df_path)
+    def run(self, df: pd.DataFrame):
+        df = df.copy()
         df["Datetime"] = pd.to_datetime(df["Datetime"])
         latest_date = df["Datetime"].max()
 
@@ -67,12 +49,7 @@ class Eco2mixCreateTSDatasetsTFT:
         df_val = df[(df["Datetime"] >= val_start) & (df["Datetime"] < test_start)].copy()
         df_test = df[df["Datetime"] >= test_start].copy()
 
-        logging.info(f"Latest date: {latest_date.strftime('%Y-%m-%d')}")
-        logging.info(f"Validation starts: {val_start.strftime('%Y-%m-%d')}")
-        logging.info(f"Test starts: {test_start.strftime('%Y-%m-%d')}")
-        logging.info(f"Train samples: {len(df_train)}, Val samples: {len(df_val)}, Test samples: {len(df_test)}")
-
-        self.training = TimeSeriesDataSet(
+        training = TimeSeriesDataSet(
             df_train,
             time_idx="time_idx",
             target="Consommation",
@@ -91,21 +68,12 @@ class Eco2mixCreateTSDatasetsTFT:
             add_encoder_length=self.add_encoder_length
         )
 
-        self.validation = TimeSeriesDataSet.from_dataset(
-            self.training, df_val, predict=True, stop_randomization=True
+        validation = TimeSeriesDataSet.from_dataset(
+            training, df_val, predict=True, stop_randomization=True
         )
 
-        self.test = TimeSeriesDataSet.from_dataset(
-            self.training, df_test, predict=True, stop_randomization=True
+        test = TimeSeriesDataSet.from_dataset(
+            training, df_test, predict=True, stop_randomization=True
         )
 
-        os.makedirs(self.output_dir, exist_ok=True)
-
-        with open(os.path.join(self.output_dir, "tft_training_dataset.pkl"), "wb") as f:
-            pickle.dump(self.training, f)
-        with open(os.path.join(self.output_dir, "tft_validation_dataset.pkl"), "wb") as f:
-            pickle.dump(self.validation, f)
-        with open(os.path.join(self.output_dir, "tft_test_dataset.pkl"), "wb") as f:
-            pickle.dump(self.test, f)
-
-        logging.info(f"All datasets saved to {self.output_dir}")
+        return training, validation, test

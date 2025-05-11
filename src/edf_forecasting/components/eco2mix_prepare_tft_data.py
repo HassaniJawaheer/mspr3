@@ -1,30 +1,13 @@
 import pandas as pd
-import os
-import logging
 from typing import List
 
-logging.basicConfig(level=logging.INFO)
-
 class Eco2mixPrepareTFTData:
-    """
-    Prepares Eco2mix data for TFT: drops columns, adds time_idx and series_id,
-    and saves the full dataset to disk.
-    """
-
-    def __init__(
-        self,
-        input_path: str,
-        output_dir: str,
-        series_id_value: str,
-        columns_to_drop: List[str]
-    ):
-        self.input_path = input_path
-        self.output_dir = output_dir
+    def __init__(self, series_id_value: str, columns_to_drop: List[str] = None):
         self.series_id_value = series_id_value
-        self.columns_to_drop = columns_to_drop
+        self.columns_to_drop = columns_to_drop or []
 
-    def run(self):
-        df = pd.read_csv(self.input_path)
+    def run(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = df.copy()
         df["Datetime"] = pd.to_datetime(df["Datetime"])
         df = df.sort_values("Datetime").reset_index(drop=True)
 
@@ -32,9 +15,6 @@ class Eco2mixPrepareTFTData:
         df["series_id"] = self.series_id_value
 
         df.drop(columns=self.columns_to_drop, inplace=True, errors="ignore")
+        return df
 
-        os.makedirs(self.output_dir, exist_ok=True)
-        df.to_parquet(os.path.join(self.output_dir, "df.parquet"))
-
-        logging.info(f"Dataset saved to {self.output_dir} with {len(df)} rows.")
        
