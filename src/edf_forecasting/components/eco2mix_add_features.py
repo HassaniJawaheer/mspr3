@@ -125,7 +125,7 @@ class Eco2mixFeaturesMinute:
             "longitude": longitude,
             "start_date": start_date,
             "end_date": end_date,
-            "hourly": "apparent_temperature",
+            "hourly": "temperature",
             "timezone": "Europe/Paris"
         }
 
@@ -137,6 +137,8 @@ class Eco2mixFeaturesMinute:
             temp_df["Hour"] = pd.to_datetime(temp_df["time"])
             temp_df.drop(columns=["time"], inplace=True)
             self.df = self.df.merge(temp_df, on="Hour", how="left")
+            self.df.drop(columns=["Hour"], inplace=True)
+
             logging.info("Temperature features added.")
         except requests.RequestException as e:
             logging.error(f"[API Error - Temperature] {e}")
@@ -159,10 +161,12 @@ class Eco2mixFeaturesMinute:
         try:
             response = requests.get(url, params=params)
             response.raise_for_status()
+            data = response.json()
             sun_df = pd.DataFrame(data["daily"])
             sun_df["Date"] = pd.to_datetime(sun_df["time"]).dt.date
             sun_df.drop(columns=["time"], inplace=True)
             self.df = self.df.merge(sun_df, on="Date", how="left")
+            self.df.drop(columns=["Date"], inplace=True)
             logging.info("Sunshine features added.")
         except requests.RequestException as e:
             logging.error(f"[API Error - Sunshine] {e}")
@@ -171,6 +175,7 @@ class Eco2mixFeaturesMinute:
         self.df["Date"] = self.df["Datetime"].dt.date
         jours_fr = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
         self.df["weekday"] = pd.to_datetime(self.df["Date"]).dt.dayofweek.apply(lambda x: jours_fr[x])
+        self.df.drop(columns=["Date"], inplace=True)
         logging.info("Weekday column added.")
 
     def add_month(self):
@@ -180,6 +185,7 @@ class Eco2mixFeaturesMinute:
             "juillet", "août", "septembre", "octobre", "novembre", "décembre"
         ]
         self.df["month"] = pd.to_datetime(self.df["Date"]).dt.month.apply(lambda x: mois_fr[x - 1])
+        self.df.drop(columns=["Date"], inplace=True)
         logging.info("Month column added.")
 
     def add_season(self):
@@ -193,6 +199,7 @@ class Eco2mixFeaturesMinute:
                 "automne"
             )
         self.df["season"] = pd.to_datetime(self.df["Date"]).dt.month.apply(get_season)
+        self.df.drop(columns=["Date"], inplace=True)
         logging.info("Season column added.")
 
     def add_vacation(self):
@@ -214,6 +221,7 @@ class Eco2mixFeaturesMinute:
                 vacations.update(pd.date_range(start=f"{year}-{start}", end=f"{year}-{end}").date)
 
         self.df["is_vacation"] = self.df["Date"].apply(lambda d: int(d in public_holidays or d in vacations))
+        self.df.drop(columns=["Date"], inplace=True)
         logging.info("Vacation flag added.")
 
     def run(self, include=None):

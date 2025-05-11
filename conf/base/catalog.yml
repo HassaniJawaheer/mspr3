@@ -27,21 +27,29 @@ cleaned_tempo_calendar:
   type: pandas.CSVDataset
   filepath: data/03_primary/eco2mix/tempo/cleaned_tempo_calendar.csv
 
+tempo_consumption_data:
+  type: pandas.CSVDataset
+  filepath: data/09_tempo/eco2mix/minute/cleaned_tempo_data.csv
+  save_args:
+    index: False
+
+tempo_consumption_enriched_data:
+  type: pandas.CSVDataset
+  filepath: data/10_enriched/eco2mix/minute/tempo_consumption_enriched_data.csv
+  save_args:
+    index: False
+
 aggregated_consumption_data:
   type: pandas.CSVDataset
   filepath: data/04_aggregate/eco2mix/definitive/aggregated_consumption_data.csv
 
 tempo_aggregated_consumption_data:
   type: pandas.CSVDataset
-  filepath: data/05_tempo/eco2mix/aggregate_day/tempo_aggregated_consumption_data.csv
+  filepath: data/09_tempo/eco2mix/aggregate_day/tempo_aggregated_consumption_data.csv
 
 features_day:
   type: pandas.CSVDataset
   filepath: data/06_features/eco2mix/day/features.csv
-
-cleaned_consumption_data_30min:
-  type: pandas.CSVDataset
-  filepath: data/03_primary/eco2mix/definitive/cleaned_consumption_data_30min.csv
 
 features_minute:
   type: pandas.CSVDataset

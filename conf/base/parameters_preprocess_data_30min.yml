@@ -1,0 +1,17 @@
+# This is a boilerplate parameters config generated for pipeline 'preprocess_data_30min'
+# using Kedro 0.19.12.
+#
+# Documentation for this file format can be found in "Parameters"
+# Link: https://docs.kedro.org/en/0.19.12/configuration/parameters.html
+
+preprocess_params:
+  mode: aggregate_minute
+
+feature_params:
+  include:
+    - temperature
+    - sunshine
+    - weekday
+    - month
+    - season
+    - vacation
