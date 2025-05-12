@@ -9,7 +9,7 @@ def create_pipeline(**kwargs):
     return pipeline([
         node(
             func=prepare_tft_data,
-            inputs=["tempo_consumption_enriched_data:", "params:preprocess_tft"],
+            inputs=["tempo_consumption_enriched_data", "params:prepare_tft_data"],
             outputs="prepared_tft_data",
             name="prepare_tft_data"
         ),
@@ -33,7 +33,7 @@ def create_pipeline(**kwargs):
         ),
         node(
             func=evaluate_tft,
-            inputs=["tft_model_artifact", "tft_test_dataset", "params:train_tft.evaluate_tft"],
+            inputs=["tft_model_artifact", "tft_test_dataset", "params:evaluate_tft"],
             outputs="tft_evaluation_scores",
             name="evaluate_tft_node"
         )

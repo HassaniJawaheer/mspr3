@@ -46,7 +46,7 @@ train_tft:
 
   max_epochs: 20
   batch_size: 64
-  accelerator: gpu
+  accelerator: cpu
   devices: 1
   precision: 32-true
   gradient_clip_val: 0.1

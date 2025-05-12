@@ -30,21 +30,21 @@ def create_pipeline(**kwargs) -> Pipeline:
                 "tempo_aggregated_consumption_data",
                 "params:add_features"
             ],
-            outputs="features_day",
+            outputs="tempo_aggregated_consumption_enriched_data",
             name="add_features"
         ),
     
         node(
             func=preprocess_data,
             inputs=[
-                "features_day",
+                "tempo_aggregated_consumption_enriched_data",
                 "params:preprocessing"
             ],
             outputs=[
-                "X_train_agg_day",
-                "X_test_agg_day",
-                "y_train_agg_day",
-                "y_test_agg_day"
+                "X_train",
+                "X_test",
+                "y_train",
+                "y_test"
             ],
             name="preprocess_data"
         ),
@@ -52,13 +52,13 @@ def create_pipeline(**kwargs) -> Pipeline:
         node(
             func=tune_model,
             inputs=[
-                "X_train_agg_day",
-                "y_train_agg_day",
+                "X_train",
+                "y_train",
                 "params:tuning"
             ],
             outputs=[
                 "xgboost_best_params",
-                "xgboost_tuning_summary"
+                "xgboost_tuning_study"
             ],
             name="tune_model"
         ),
@@ -66,11 +66,10 @@ def create_pipeline(**kwargs) -> Pipeline:
         node(
             func=generate_plots_from_study,
             inputs=[
-                "xgboost_tuning_summary",
                 "xgboost_tuning_study",
                 "params:plot_tuning_dir"
             ],
-            outputs="tuning_plot_paths",
+            outputs="xgbosst_tuning_plot_dir",
             name="generate_plots_from_study"
         )
     ])

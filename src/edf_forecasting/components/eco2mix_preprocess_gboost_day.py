@@ -41,7 +41,7 @@ class Eco2mixPreprocessGBoostDay:
             X, y, test_size=self.test_size, shuffle=self.shuffle, random_state=self.seed
         )
 
-        return X_train, X_test, y_train, y_test
+        return pd.DataFrame(X_train), pd.DataFrame(X_test), pd.DataFrame(y_train), pd.DataFrame(y_test)
 
     def _create_dataset_sliding(self, df, window_size, target_col_prefix, date_col,
                                 features_to_include, target_features_to_include):

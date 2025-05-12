@@ -4,7 +4,9 @@ from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_forecasting import TemporalFusionTransformer
 from pytorch_forecasting.metrics import QuantileLoss, MAE, RMSE
 from sklearn.metrics import r2_score
-import torch
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = ""
+
 
 class Eco2mixTrainModelTFT:
     def __init__(self, params: dict):
@@ -21,8 +23,8 @@ class Eco2mixTrainModelTFT:
             attention_head_size=self.params.get("attention_head_size", 4),
             dropout=self.params.get("dropout", 0.1),
             hidden_continuous_size=self.params.get("hidden_continuous_size", 64),
-            output_size=self.params.get("output_size", 7),
-            loss=eval(self.params.get("loss", "QuantileLoss"))()
+            output_size=7,
+            loss=QuantileLoss(quantiles=[0.025, 0.50, 0.975])
         )
 
         # Logger
@@ -54,7 +56,7 @@ class Eco2mixTrainModelTFT:
         self.trainer = Trainer(
             max_epochs=self.params.get("max_epochs", 20),
             log_every_n_steps=self.params.get("log_every_n_steps", 1),
-            accelerator=self.params.get("accelerator", "gpu"),
+            accelerator=self.params.get("accelerator", "cpu"),
             devices=self.params.get("devices", 1),
             precision=self.params.get("precision", "32-true"),
             gradient_clip_val=self.params.get("gradient_clip_val", 0.1),
@@ -64,20 +66,20 @@ class Eco2mixTrainModelTFT:
 
         train_loader = training.to_dataloader(train=True, batch_size=self.params.get("batch_size", 64), num_workers=0)
         val_loader = validation.to_dataloader(train=False, batch_size=self.params.get("batch_size", 64) * 10, num_workers=0)
-
+        
+        print(f"Using accelerator: {self.trainer.accelerator}")
         self.trainer.fit(self.model, train_loader, val_loader)
 
         # Evaluate
         raw_predictions = self.model.predict(val_loader, mode="raw", return_x=True)
-        pred_median = raw_predictions.output.prediction[:, :, 3]
+        pred_2_5 = raw_predictions.output.prediction[:, :, 0]
+        pred_97_5 = raw_predictions.output.prediction[:, :, 2]
         true_values = raw_predictions.x["decoder_target"]
 
-        mae = MAE()(pred_median, true_values)
-        rmse = RMSE()(pred_median, true_values)
-        r2 = r2_score(true_values.cpu().numpy().flatten(), pred_median.cpu().numpy().flatten())
-        pred_5 = raw_predictions.output.prediction[:, :, 0]
-        pred_95 = raw_predictions.output.prediction[:, :, 6]
-        coverage = ((true_values >= pred_5) & (true_values <= pred_95)).float().mean().item() * 100
+        mae = MAE()(pred_97_5, true_values)
+        rmse = RMSE()(pred_97_5, true_values)
+        r2 = r2_score(true_values.cpu().numpy().flatten(), pred_97_5.cpu().numpy().flatten())
+        coverage = ((true_values >= pred_2_5) & (true_values <= pred_97_5)).float().mean().item() * 100
 
         training_info = {
             "model": "TemporalFusionTransformer",

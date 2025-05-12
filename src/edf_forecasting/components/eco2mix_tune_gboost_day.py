@@ -20,7 +20,7 @@ class XGBoostTuner:
 
     def run(self, X, y):
         timestamp = datetime.datetime.now().strftime("tuning_%Y-%m-%d_%H-%M")
-        base_dir = f"data/07_models/eco2mix/xgboost_day/{timestamp}"
+        base_dir = f"data/07_model_output/eco2mix/xgboost/day/optuna_study/{timestamp}"
         os.makedirs(base_dir, exist_ok=True)
 
         study_path = os.path.join(base_dir, "optuna_study.db")
@@ -71,4 +71,4 @@ class XGBoostTuner:
             yaml.dump(summary, f)
 
         logging.info(f"Tuning complete. Params saved to {params_path}")
-        return best_params, summary
+        return best_params, study

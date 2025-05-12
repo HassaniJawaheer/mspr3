@@ -45,119 +45,121 @@ prepared_tft_data:
 
 tft_training_dataset:
   type: pickle.PickleDataset
-  filepath: data/07_model_input/eco2mix/tft/tsdataset/training.pkl
+  filepath: data/07_model_input/eco2mix/tft/minute/tsdataset/training.pkl
 
 tft_validation_dataset:
   type: pickle.PickleDataset
-  filepath: data/07_model_input/eco2mix/tft/tsdataset/validation.pkl
+  filepath: data/07_model_input/eco2mix/tft/minute/tsdataset/validation.pkl
 
 tft_test_dataset:
   type: pickle.PickleDataset
-  filepath: data/07_model_input/eco2mix/tft/tsdataset/test.pkl
+  filepath: data/07_model_input/eco2mix/tft/minute/tsdataset/test.pkl
 
 tft_model_artifact:
   type: pickle.PickleDataset
-  filepath: data/08_final_models/tft/model_artifact.pkl
+  filepath: data/06_model/tft/model.ckpt
   versioned: true
 
 tft_training_metadata:
   type: yaml.YAMLDataset
-  filepath: data/08_final_models/tft/training.yml
+  filepath: data/07_model_output/tft/training.yml
   versioned: true
 
 tft_training_scores:
   type: yaml.YAMLDataset
-  filepath: data/08_final_models/tft/scores.yml
+  filepath: data/07_model_output/tft/scores.yml
   versioned: true
 
 tft_evaluation_scores:
   type: yaml.YAMLDataset
-  filepath: data/08_final_models/tft/evaluation_scores.yml
+  filepath: data/07_model_output/tft/evaluation_scores.yml
   versioned: true
 
 aggregated_consumption_data:
   type: pandas.CSVDataset
-  filepath: data/04_aggregate/eco2mix/definitive/aggregated_consumption_data.csv
+  filepath: data/03_primary/eco2mix/definitive/aggregated_consumption_data.csv
 
 tempo_aggregated_consumption_data:
   type: pandas.CSVDataset
-  filepath: data/09_tempo/eco2mix/aggregate_day/tempo_aggregated_consumption_data.csv
+  filepath: data/03_primary/eco2mix/aggregate_day/tempo_aggregated_consumption_data.csv
 
-features_day:
+tempo_aggregated_consumption_enriched_data:
   type: pandas.CSVDataset
-  filepath: data/06_features/eco2mix/day/features.csv
-
-features_minute:
-  type: pandas.CSVDataset
-  filepath: data/06_features/eco2mix/minute/features_minute.csv
+  filepath: data/04_feature/eco2mix/day/tempo_aggregated_consumption_enriched_data.csv
 
 X_train_agg_day:
   type: pandas.CSVDataset
-  filepath: data/05_model_input/X_train_agg_day.csv
+  filepath: data/05_model_input/eco2mix/xgboost/day/X_train_agg_day.csv
   load_args:
     delimiter: ","
   save_args:
     index: False
+  versioned: true
 
 X_test_agg_day:
   type: pandas.CSVDataset
-  filepath: data/05_model_input/X_test_agg_day.csv
+  filepath: data/05_model_input/eco2mix/xgboost/day/X_test_agg_day.csv
   load_args:
     delimiter: ","
   save_args:
     index: False
+  versioned: true
 
 y_train_agg_day:
   type: pandas.CSVDataset
-  filepath: data/05_model_input/y_train_agg_day.csv
+  filepath: data/05_model_input/eco2mix/xgboost/day/y_train_agg_day.csv
   load_args:
     delimiter: ","
   save_args:
     index: False
+  versioned: true
 
 y_test_agg_day:
   type: pandas.CSVDataset
-  filepath: data/05_model_input/y_test_agg_day.csv
+  filepath: data/05_model_input/eco2mix/xgboost/day/y_test_agg_day.csv
   load_args:
     delimiter: ","
   save_args:
     index: False
+    versioned: true
 
 xgboost_best_params:
   type: yaml.YAMLDataset
-  filepath: data/07_models/eco2mix/xgboost_day/tuning_<timestamp>/best_params.yml
+  filepath: data/07_model_output/eco2mix/xgboost/day/params/best_params.yml
+  versioned: true
 
 xgboost_tuning_study:
   type: edf_forecasting.datasets.optuna_study_dataset.OptunaStudyDataset
-  filepath: data/07_models/eco2mix/xgboost_day/tuning_2025-05-11/optuna_study.db
+  filepath: data/07_model_output/eco2mix/xgboost/day/optuna_study/optuna_study.db
   study_name: xgb_tuning
+  versioned: true
 
-
-xgbosst_day_tuning_plot_dir:
+xgbosst_tuning_plot_dir:
   type: json.JSONDataset
-  filepath: data/07_models/eco2mix/xgboost_day/plots/paths.json
+  filepath: data/07_model_output/eco2mix/xgboost/day/plots/paths.json
+  versioned: true
 
 xgboost_model_artifact_path:
   type: pickle.PickleDataset
-  filepath: data/08_final_models/xgboost_day/latest/model.joblib
+  filepath: data/06_models/eco2mix/xgboost/day/model.joblib
   versioned: true
 
 xgboost_training_scores_path:
   type: yaml.YAMLDataset
-  filepath: data/08_final_models/xgboost_day/latest/scores.yml
+  filepath: data/07_model_output/eco2mix/xgboost/day/scores/scores.yml
   versioned: true
 
 xgboost_training_metadata_path:
   type: yaml.YAMLDataset
-  filepath: data/08_final_models/xgboost_day/latest/training.yml
+  filepath: data/07_model_output/eco2mix/xgboost/day/params/training.yml
   versioned: true
 
 xgboost_crossval_scores:
   type: yaml.YAMLDataset
-  filepath: data/08_final_models/xgboost_day/crossval_scores.yml
+  filepath: data/07_model_output/eco2mix/xgboost/day/params/crossval_scores.yml
   versioned: true
 
 xgboost_evaluation_scores:
   type: yaml.YAMLDataset
-  filepath: data/08_final_models/xgboost_day/evaluation_scores.yml
+  filepath: data/07_model_output/eco2mix/xgboost/day/params/evaluation_scores.yml
   versioned: true
