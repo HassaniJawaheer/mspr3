@@ -13,23 +13,16 @@ def train_model(X_train, y_train, training_params):
         y_train=y_train,
         params=training_params
     )
-    return trainer.run()
+    model, scores, metadata = trainer.run()
+    return model, scores, metadata
 
-def cross_validate_model(X_train, y_train, training_params, validation_params):
-    validator = Eco2mixCrossValidationXGBoostDay(
-        X=X_train,
-        y=y_train,
-        training_params=training_params,
-        cv_params=validation_params
-    )
-    return validator.run()
 
 def evaluate_model(model, X_test, y_test):
     evaluator = Eco2mixEvaluateGBoostDay(model=model)
-    return evaluator.run(X_test, y_test)
+    scores = evaluator.run(X_test, y_test)
+    return scores
 
-
-def generate_plots(model, X_test, y_test, params):
+def generate_plots(_, model, X_test, y_test, params):
     generate_prediction_plots(
         model=model,
         X_test=X_test,

@@ -3,7 +3,7 @@ This is a boilerplate pipeline 'xgboost_training_day'
 generated using Kedro 0.19.12
 """
 from kedro.pipeline import Pipeline, node, pipeline
-from .nodes import train_model, cross_validate_model, evaluate_model, generate_plots
+from .nodes import train_model, evaluate_model, generate_plots
 
 def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
@@ -12,7 +12,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             inputs=[
                 "X_train_agg_day",
                 "y_train_agg_day",
-                "params:parameters_xgboost_training_day@training_params"
+                "params:training_params"
             ],
             outputs=[
                 "xgboost_model",
@@ -20,18 +20,6 @@ def create_pipeline(**kwargs) -> Pipeline:
                 "xgboost_training_metadata"
             ],
             name="train_model"
-        ),
-
-        node(
-            func=cross_validate_model,
-            inputs=[
-                "X_train_agg_day",
-                "y_train_agg_day",
-                "params:parameters_xgboost_training_day@training_params",
-                "params:parameters_xgboost_training_day@validate_params"
-            ],
-            outputs="xgboost_crossval_scores",
-            name="cross_validate_model"
         ),
 
         node(
@@ -47,10 +35,11 @@ def create_pipeline(**kwargs) -> Pipeline:
         node(
             func=generate_plots,
             inputs=[
+                "xgboost_evaluation_scores",
                 "xgboost_model",
                 "X_test_agg_day",
                 "y_test_agg_day",
-                "params:parameters_xgboost_training_day@plots_params"
+                "params:plots_params"
              ],
             outputs=None,
             name="generate_prediction_plots"

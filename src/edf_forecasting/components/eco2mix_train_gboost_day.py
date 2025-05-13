@@ -2,7 +2,7 @@ import numpy as np
 import logging
 from xgboost import XGBRegressor
 from sklearn.multioutput import MultiOutputRegressor
-from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.metrics import r2_score, root_mean_squared_error
 
 logging.basicConfig(level=logging.INFO)
 
@@ -19,7 +19,7 @@ class Eco2mixTrainGBoostDay:
         y_pred = model.predict(self.X)
         scores = {
             "r2_score": float(r2_score(self.y, y_pred)),
-            "rmse": float(np.sqrt(mean_squared_error(self.y, y_pred)))
+            "rmse": float(root_mean_squared_error(self.y, y_pred))
         }
 
         metadata = {
