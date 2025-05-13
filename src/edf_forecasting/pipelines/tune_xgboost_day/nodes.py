@@ -36,15 +36,12 @@ def preprocess_data(df, params):
     X_train, X_test, y_train, y_test = processor.run(df)
     return X_train, X_test, y_train, y_test
 
-# 8. Tuning (with Optuna)
+# Tuning (with Optuna)
 def tune_model(X, y, params):
     tuner = XGBoostTuner(
         n_trials=params["n_trials"],
         timeout=params["timeout"],
         seed=params["seed"]
     )
-    best_params, summary = tuner.run(X, y)
-    return best_params, summary
-
-def generate_plots_from_study(study: optuna.Study, params) -> dict:
-    return generate_tuning_plots(study, params["output_dir"])
+    best_params, _ = tuner.run(X, y)
+    return best_params

@@ -3,7 +3,7 @@ This is a boilerplate pipeline 'tune_xgboost_day'
 generated using Kedro 0.19.12
 """
 from kedro.pipeline import node, Pipeline, pipeline  # noqa
-from .nodes import aggregate_data, add_tempo, add_features, preprocess_data, tune_model, generate_plots_from_study
+from .nodes import aggregate_data, add_tempo, add_features, preprocess_data, tune_model
 
 def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
@@ -41,10 +41,10 @@ def create_pipeline(**kwargs) -> Pipeline:
                 "params:preprocessing"
             ],
             outputs=[
-                "X_train",
-                "X_test",
-                "y_train",
-                "y_test"
+                "X_train_agg_day",
+                "X_test_agg_day",
+                "y_train_agg_day",
+                "y_test_agg_day"
             ],
             name="preprocess_data"
         ),
@@ -52,24 +52,11 @@ def create_pipeline(**kwargs) -> Pipeline:
         node(
             func=tune_model,
             inputs=[
-                "X_train",
-                "y_train",
+                "X_train_agg_day",
+                "y_train_agg_day",
                 "params:tuning"
             ],
-            outputs=[
-                "xgboost_best_params",
-                "xgboost_tuning_study"
-            ],
+            outputs="xgboost_best_params",
             name="tune_model"
-        ),
-
-        node(
-            func=generate_plots_from_study,
-            inputs=[
-                "xgboost_tuning_study",
-                "params:plot_tuning_dir"
-            ],
-            outputs="xgbosst_tuning_plot_dir",
-            name="generate_plots_from_study"
         )
     ])

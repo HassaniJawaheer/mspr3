@@ -30,9 +30,6 @@ preprocessing:
   shuffle: false
 
 tuning:
-  n_trials: 20
+  n_trials: 1
   timeout: null
   seed: 42
-
-plot_tuning_dir:  
-  output_dir: "data/07_model_output/eco2mix/xgboost/day/plots"
