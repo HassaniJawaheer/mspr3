@@ -23,57 +23,57 @@ cleaned_consumption_data:
   type: pandas.CSVDataset
   filepath: data/03_primary/eco2mix/definitive/cleaned_consumption_data.csv
 
+checked_consumption_data:
+  type: pandas.CSVDataset
+  filepath: data/03_primary/eco2mix/definitive/30min/checked/checked_consumption_data.csv
+  load_args:
+    index_col: 0
+    parse_dates: true
+  save_args:
+    index: true
+  
+train_checked_consumption_data:
+  type: pandas.CSVDataset
+  filepath: data/03_primary/eco2mix/definitive/30min/checked/split/train_checked_consumption_data.csv
+  load_args:
+    index_col: 0
+    parse_dates: true
+  save_args:
+    index: true
+
+cal_checked_consumption_data:
+  type: pandas.CSVDataset
+  filepath: data/03_primary/eco2mix/definitive/30min/checked/split/cal_checked_consumption_data.csv
+  load_args:
+    index_col: 0
+    parse_dates: true
+  save_args:
+    index: true
+
+test_checked_consumption_data:
+  type: pandas.CSVDataset
+  filepath: data/03_primary/eco2mix/definitive/30min/checked/split/test_checked_consumption_data.csv
+  load_args:
+    index_col: 0
+    parse_dates: true
+  save_args:
+    index: true
+  
 cleaned_tempo_calendar:
   type: pandas.CSVDataset
   filepath: data/03_primary/eco2mix/tempo/cleaned_tempo_calendar.csv
 
 tempo_consumption_data:
   type: pandas.CSVDataset
-  filepath: data/09_tempo/eco2mix/minute/cleaned_tempo_data.csv
+  filepath: data/03_primary/eco2mix/aggregate_minute/tempo_consumption_data.csv
   save_args:
     index: False
 
 tempo_consumption_enriched_data:
   type: pandas.CSVDataset
-  filepath: data/10_enriched/eco2mix/minute/tempo_consumption_enriched_data.csv
+  filepath: data/03_primary/eco2mix/aggregate_minute/tempo_consumption_enriched_data.csv
   save_args:
     index: False
-
-prepared_tft_data:
-  type: pandas.ParquetDataset
-  filepath: data/05_model_input/eco2mix/tft/minute/data/prepared_tft_data.parquet
-
-tft_training_dataset:
-  type: pickle.PickleDataset
-  filepath: data/07_model_input/eco2mix/tft/minute/tsdataset/training.pkl
-
-tft_validation_dataset:
-  type: pickle.PickleDataset
-  filepath: data/07_model_input/eco2mix/tft/minute/tsdataset/validation.pkl
-
-tft_test_dataset:
-  type: pickle.PickleDataset
-  filepath: data/07_model_input/eco2mix/tft/minute/tsdataset/test.pkl
-
-tft_model_artifact:
-  type: pickle.PickleDataset
-  filepath: data/06_model/tft/model.ckpt
-  versioned: true
-
-tft_training_metadata:
-  type: yaml.YAMLDataset
-  filepath: data/07_model_output/tft/training.yml
-  versioned: true
-
-tft_training_scores:
-  type: yaml.YAMLDataset
-  filepath: data/07_model_output/tft/scores.yml
-  versioned: true
-
-tft_evaluation_scores:
-  type: yaml.YAMLDataset
-  filepath: data/07_model_output/tft/evaluation_scores.yml
-  versioned: true
 
 aggregated_consumption_data:
   type: pandas.CSVDataset

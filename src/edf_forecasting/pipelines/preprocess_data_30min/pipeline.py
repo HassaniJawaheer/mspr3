@@ -4,21 +4,21 @@ generated using Kedro 0.19.12
 """
 
 from kedro.pipeline import node, pipeline
-from .nodes import add_tempo_min, add_features_min
+from .nodes import *
 
 def create_pipeline(**kwargs):
     return pipeline([
         node(
-            func=add_tempo_min,
-            inputs=["cleaned_consumption_data", "cleaned_tempo_calendar", "params:preprocess_params"],
-            outputs="tempo_consumption_data",
-            name="add_tempo_min"
+            func=check_frequency,
+            inputs=["cleaned_consumption_data", "params:check_frequency"],
+            outputs="checked_consumption_data",
+            name="check_frequency"
         ),
 
         node(
-            func=add_features_min,
-            inputs=["tempo_consumption_data", "params:feature_params"],
-            outputs="tempo_consumption_enriched_data",
-            name="add_features_min"
+            func=split_train_cal_test,
+            inputs=["checked_consumption_data", "params:split_train_cal_test"],
+            outputs=["train_checked_consumption_data", "cal_checked_consumption_data", "test_checked_consumption_data"],
+            name="split_train_cal_test"
         )
     ])

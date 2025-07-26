@@ -4,6 +4,14 @@
 # Documentation for this file format can be found in "Parameters"
 # Link: https://docs.kedro.org/en/0.19.12/configuration/parameters.html
 
+check_frequency:
+  datetime_col: Datetime 
+  freq: 30min 
+
+split_train_cal_test:
+  cal_year: 2021
+  test_year: 2022
+
 preprocess_params:
   mode: aggregate_minute
 

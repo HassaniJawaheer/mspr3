@@ -22,4 +22,6 @@ ensuite
 kedro viz
 kedro viz --pipeline prepare_data
 ```
+Demarrer la pipeline 
+`kedro run --pipeline xgboost_day_training`
 
