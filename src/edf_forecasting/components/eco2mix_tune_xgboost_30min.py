@@ -1,26 +1,23 @@
 import os
 import yaml
-import logging
 import datetime
-import numpy as np
-import pandas as pd
 import optuna
-
+import logging
 from xgboost import XGBRegressor
-from sklearn.multioutput import MultiOutputRegressor
 from sklearn.model_selection import cross_val_score
 
 logging.basicConfig(level=logging.INFO)
 
 class XGBoostTuner:
-    def __init__(self, n_trials=20, timeout=None, seed=42):
+    def __init__(self, n_trials=20, cv=3, timeout=None, seed=42, study_dir="optuna_studies"):
         self.n_trials = n_trials
+        self.cv = cv
         self.timeout = timeout
         self.seed = seed
 
     def run(self, X, y):
         timestamp = datetime.datetime.now().strftime("tuning_%Y-%m-%d_%H-%M")
-        base_dir = f"data/07_model_output/eco2mix/xgboost/day/optuna_study/{timestamp}"
+        base_dir = f"data/07_model_output/eco2mix/xgboost/30min/optuna_study/{timestamp}"
         os.makedirs(base_dir, exist_ok=True)
 
         study_path = os.path.join(base_dir, "optuna_study.db")
@@ -49,9 +46,10 @@ class XGBoostTuner:
                 "n_jobs": -1,
                 "random_state": self.seed
             }
-            model = MultiOutputRegressor(XGBRegressor(**params))
-            score = cross_val_score(model, X, y, cv=3, scoring='neg_root_mean_squared_error', n_jobs=-1)
-            return -score.mean()
+
+            model = XGBRegressor(**params)
+            scores = cross_val_score(model, X, y, cv=self.cv, scoring="neg_root_mean_squared_error", n_jobs=-1)
+            return -scores.mean()
 
         study.optimize(objective, n_trials=self.n_trials, timeout=self.timeout, show_progress_bar=True)
 
@@ -63,6 +61,7 @@ class XGBoostTuner:
             "best_score_rmse": best_score,
             "best_params": best_params,
             "n_trials": self.n_trials,
+            "cv": self.cv,
             "seed": self.seed,
             "timestamp": timestamp
         }

@@ -58,7 +58,17 @@ test_checked_consumption_data:
     parse_dates: true
   save_args:
     index: true
-  
+
+X_train_30min:
+  type: MemoryDataset
+
+y_train_30min:
+  type: MemoryDataset
+
+xgboost_optuna_best_params_30min:
+  type: yaml.YAMLDataset
+  filepath: data/07_model_output/eco2mix/xgboost/30min/params/best_params.yml
+
 cleaned_tempo_calendar:
   type: pandas.CSVDataset
   filepath: data/03_primary/eco2mix/tempo/cleaned_tempo_calendar.csv

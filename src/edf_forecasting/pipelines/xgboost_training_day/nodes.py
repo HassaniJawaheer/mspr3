@@ -3,7 +3,6 @@ This is a boilerplate pipeline 'xgboost_training_day'
 generated using Kedro 0.19.12
 """
 from edf_forecasting.components.eco2mix_train_gboost_day import Eco2mixTrainGBoostDay
-from edf_forecasting.components.eco2mix_cross_validation_xgboost_day import Eco2mixCrossValidationXGBoostDay
 from edf_forecasting.components.eco2mix_evaluate_gboost_day import Eco2mixEvaluateGBoostDay
 from edf_forecasting.components.eco2mix_generate_prediction_plots_gboost_day import generate_prediction_plots
 
