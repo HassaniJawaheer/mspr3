@@ -65,9 +65,39 @@ X_train_30min:
 y_train_30min:
   type: MemoryDataset
 
+model_xgboost_30min:
+  type: pickle.PickleDataset
+  filepath: data/06_models/eco2mix/xgboost/30min/model.joblib
+  versioned: true
+
+train_scores_xgboost_30min:
+  type: yaml.YAMLDataset
+  filepath: data/07_model_output/eco2mix/xgboost/30min/scores/train_scores.yml
+  versioned: true
+
+metadata_xgboost_30min:
+  type: yaml.YAMLDataset
+  filepath: data/07_model_output/eco2mix/xgboost/30min/metadata/train_metadata.yml
+  versioned: true
+
 xgboost_optuna_best_params_30min:
   type: yaml.YAMLDataset
   filepath: data/07_model_output/eco2mix/xgboost/30min/params/best_params.yml
+
+q_inf_xgboost_30min:
+  type: yaml.YAMLDataset
+  filepath: data/07_model_output/eco2mix/xgboost/30min/metadata/q_inf.yml
+  versioned: true
+
+q_sup_xgboost_30min:
+  type: yaml.YAMLDataset
+  filepath: data/07_model_output/eco2mix/xgboost/30min/metadata/q_sup.yml
+  versioned: true
+
+test_scores_xgboost_30min:
+  type: yaml.YAMLDataset
+  filepath: data/07_model_output/eco2mix/xgboost/30min/scores/test_scores.yml
+  versioned: true
 
 cleaned_tempo_calendar:
   type: pandas.CSVDataset
