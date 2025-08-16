@@ -30,6 +30,8 @@ dependencies = [
  "tensorboard>=2.19.0",
  "kedro-datasets[json,pandas,pickle,text,tracking]>=4.1.0",
  "kedro-viz>=11.0.1",
+ "mlflow>=1.27.0",
+ "kedro-mlflow~=0.12.2",
 ]
 
 [project.scripts]

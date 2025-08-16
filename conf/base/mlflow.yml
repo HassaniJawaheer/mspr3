@@ -1,0 +1,13 @@
+mlflow:
+  tracking:
+    uri: data/00_reporting/mlflow
+  experiment:
+    name: edf_forecasting
+  ui:
+    port: 5000
+  
+run:
+  name: ${pipeline_name}
+
+hooks:
+  enable_mlflow: true

@@ -3,6 +3,14 @@
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
 
+trained_mode:
+type: kedro.mlflow.io.models.MlflowModelLogger
+flavor: python_function
+artifact_path: data/06_models
+signature: auto
+input_exemple: null
+pip_requirements: requirements.txt
+
 scraping_status:
   type: json.JSONDataset
   filepath: data/00_reporting/scraping_status.json

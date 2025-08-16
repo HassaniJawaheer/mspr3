@@ -63,4 +63,9 @@ Vérifier si Kedro est installé :
 ```bash
 kedro --help
 ```
+## Intégration de mlflow
+**Ajoute les deps au projet (et lock)**
+```bash
+uv add mlflow "kedro-mlflow~=0.12.2"   # car ma version de Kedro est 0.12.x
+```
 
